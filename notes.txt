@@ -1,0 +1,53 @@
+Server:
+    -clients[]: [Client]
+    -command: Command
+    +send_command(mode): sends command to all queue
+
+Client:
+    -server host: string
+    -os: string
+    -device_name: string
+    -commandQueue: Queue
+
+Command:
+    -command instructions: string
+    -response: string
+    -error: bool
+    -isExecuted: bool
+    +process_command(): processes the command instructions
+    +open_app(name): opens app of name
+    +status_check(): send status check eg: os, ip
+    +self_destruct(): close connection 
+
+CommandQueue:
+    -command[]: [Command]
+    -client: Client
+    -isFree: bool
+
+Minimalist:
+    A single server to multi client architecture will pass a command
+    over the network in order for the client to execute the command 
+    and then send its response back the the server. 
+
+    Functional:
+        the server will be able to send commands to a client
+        the server will be able to have multiple clients connect
+        the server will be able to selectively send commands to either 1 or more clients at the same time
+        the client will be able to return response after executing command
+        the client will be able to execute commands sent by the server
+        
+        the server will not be able to send commands that are not predefined
+        the client will not be able to execute commands that are not predefined
+
+
+    Nonfunctional:
+        this application will be able to time out if there is no response
+        this application will have a limit to how many commands can be sent out at once
+        this application will execute commands within 30 seconds
+
+Enhanced:
+    In this botnet application a server will send commands to a queue
+    with specification as to how many clients should run the command
+    the queue will randomly assign a client to run the command and return
+    its result to the server
+
