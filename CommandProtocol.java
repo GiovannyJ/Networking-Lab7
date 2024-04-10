@@ -1,21 +1,23 @@
-import java.net.*;
-import java.io.*;
-import java.io.Serializable;
 
 public class CommandProtocol {
+    //STATES
     private static final int WAITING = 0;
     private static final int PROCESSING_COMMAND = 1;
 
-    private int state = WAITING;
+    private int state = PROCESSING_COMMAND;
 
 
-    public String processCommand(Command command){
-        
+    /**
+     * processCommand - run the command of the input and mutate the commands response
+     * @param command - the command to process
+     * @return - the mutated command 
+     */
+    public String processCommand(Command command){    
         Boolean isProcessed = false;
         String theOutput = null;
 
         if (state == WAITING){
-            theOutput = "Connected";
+            command.setResponse("Connected");;
             state = PROCESSING_COMMAND;
         }else if (state == PROCESSING_COMMAND){
             String instructions = command.getInstructions();
@@ -45,24 +47,47 @@ public class CommandProtocol {
                         command.setResponse("Client Failed to set destruct");
                     }
                     break;
-                default:
+                case "exit":
+                    command.setResponse("exiting");
                     isProcessed = false;
-                
-                }
-                if (!isProcessed){
-                    state = WAITING;
-                }
-                theOutput = command.getResponse();
+                default:
+                    isProcessed = false;   
+            }
+            if (!isProcessed){
+                state = WAITING;
+            }
         }
+
+        if (isProcessed){
+            theOutput = command.getResponse();
+            command.setIsExecutedTrue();
+            command.setErrorFalse();
+        }
+        
         return theOutput;
     }
 
+    /**
+     * openApp - open the app of the commands instructions on the client side
+     * @param appName - the name of the app to open
+     * @return - true if executed false if not
+     */
     private boolean openApp(String appName){
         return true;
     }
+    
+    /**
+     * status_check - sends the clients OS and uptime status to the server
+     * @return - true if executed false if not
+     */
     private boolean status_check(){
         return true;
     }
+
+    /**
+     * self_destruct - forcefully closes the connection of the client 
+     * @return true if executed false if not
+     */
     private boolean self_destruct(){
         return true;
     }

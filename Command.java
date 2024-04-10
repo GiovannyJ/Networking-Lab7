@@ -1,6 +1,6 @@
 import java.io.Serializable;
 
-public class Command {
+public class Command implements Serializable{
     /**
      * Properties
      */

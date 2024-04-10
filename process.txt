@@ -1,0 +1,11 @@
+when command is sent -> server packs w instructions and command name
+send to command queue
+command queue holds list of commands 
+---or command has lifetime when lifetime is up it sets to null
+
+client grabs from command queue
+looks at instructions and parses with protocol
+processes and changes commands status
+sends back to command queue
+
+server looks at results if command status is finished

