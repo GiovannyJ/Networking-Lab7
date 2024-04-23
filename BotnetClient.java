@@ -45,9 +45,9 @@ public class BotnetClient {
 
             String result = commandP.processCommand(inCommand);
 
-            if (result.equalsIgnoreCase("exiting")){
-                break;
-            }
+            // if (result.equalsIgnoreCase("exiting")){
+            //     break;
+            // }
             
             System.out.println("Command Result: " + result);
             // System.out.println("Command Response: " + inCommand.getResponse());
@@ -65,6 +65,7 @@ public class BotnetClient {
             }
             catch (ClassNotFoundException cnfe){
                 System.err.println("BotNetClient: Problem reading object: class not found");
+                System.err.println(cnfe);
                 System.exit(1);
             }
 

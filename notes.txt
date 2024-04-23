@@ -17,7 +17,6 @@ Command:
     +process_command(): processes the command instructions
     +open_app(name): opens app of name
     +status_check(): send status check eg: os, ip
-    +self_destruct(): close connection 
 
 CommandQueue:
     -command[]: [Command]

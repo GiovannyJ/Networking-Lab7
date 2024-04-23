@@ -39,17 +39,10 @@ public class CommandProtocol {
                         command.setResponse("Client inactive");
                     }
                     break;
-                case "selfDestruct":
-                    if(self_destruct()){
-                        command.setResponse("Self Destructed Client");
-                        isProcessed = true;
-                    }else{
-                        command.setResponse("Client Failed to set destruct");
-                    }
-                    break;
                 case "exit":
                     command.setResponse("exiting");
-                    isProcessed = false;
+                    isProcessed = true;
+                    break;
                 default:
                     isProcessed = false;   
             }
@@ -81,14 +74,6 @@ public class CommandProtocol {
      * @return - true if executed false if not
      */
     private boolean status_check(){
-        return true;
-    }
-
-    /**
-     * self_destruct - forcefully closes the connection of the client 
-     * @return true if executed false if not
-     */
-    private boolean self_destruct(){
         return true;
     }
     

