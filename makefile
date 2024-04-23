@@ -1,6 +1,5 @@
 server:
-	javac BotnetServer.java Command.java CommandProtocol.java CommandQueue.java
-
+	javac BotnetServer.java Command.java CommandProtocol.java
 runserver:
 	java -cp . .\BotnetServer.java 2002
 

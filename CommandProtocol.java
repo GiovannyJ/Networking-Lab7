@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class CommandProtocol {
     //STATES
@@ -32,8 +35,9 @@ public class CommandProtocol {
                     }
                     break;
                 case "status":
-                    if(status_check()){
-                        command.setResponse("Client Active");
+                    String response = status_check();
+                    if(response != ""){
+                        command.setResponse(response);
                         isProcessed = true;
                     }else{
                         command.setResponse("Client inactive");
@@ -55,6 +59,9 @@ public class CommandProtocol {
             theOutput = command.getResponse();
             command.setIsExecutedTrue();
             command.setErrorFalse();
+        }else{
+            command.setIsExecutedTrue();
+            command.setErrorTrue();
         }
         
         return theOutput;
@@ -66,15 +73,33 @@ public class CommandProtocol {
      * @return - true if executed false if not
      */
     private boolean openApp(String appName){
-        return true;
+        try {
+            ProcessBuilder pb = new ProcessBuilder(appName);
+            pb.start();
+            return true;
+        } catch (IOException e) {
+            System.err.println("[-]Error opening " + appName +": " + e.getMessage());
+            return false;
+        }
     }
     
     /**
      * status_check - sends the clients OS and uptime status to the server
      * @return - true if executed false if not
      */
-    private boolean status_check(){
-        return true;
+    private String status_check(){
+         try {
+            InetAddress localhost = InetAddress.getLocalHost();
+            String ipAddress = localhost.getHostAddress();
+            String osName = System.getProperty("os.name");
+            String javaVersion = System.getProperty("java.version");
+            String userName = System.getProperty("user.name");
+            String status = "\n\t[*]IP ADDRESS: "+ipAddress+"\n\t[*]OPERATING SYSTEM: "+osName+"\n\t[*]JAVA VERSION: "+javaVersion+"\n\t[*]USER NAME: "+userName+"\n\t[*]STATUS: Active";
+            return status;
+        } catch (UnknownHostException e) {
+            System.err.println("[-]Unable to determine IP address: " + e.getMessage());
+            return "";
+        }
     }
     
 }

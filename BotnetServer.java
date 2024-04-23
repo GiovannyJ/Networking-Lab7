@@ -4,7 +4,7 @@ import java.io.*;
 public class BotnetServer {
     // Properties
     private Socket socket;
-    private String MENU = "\n------\nEnter a Command name \n1)open app\n2)status\n3)exit\n------";
+    final private String MENU = "\n------\nEnter a Command name \n1)open app\n2)status\n3)exit\n------";
 
     //Constructor
     public BotnetServer(Socket socket){
@@ -27,7 +27,7 @@ public class BotnetServer {
             case "1":
                 command.setCommand("openApp");
                 try {
-                    System.out.print(">App Name: ");
+                    System.out.print("[>]App Name: ");
                     String appName = bufferedReader.readLine();
                     command.setInstructions(appName);
                 } catch (IOException e) {
@@ -42,7 +42,7 @@ public class BotnetServer {
                 command.setCommand("exit");
                 break;
             default:
-                System.out.println(">Invalid Input");
+                System.out.println("[-]Invalid Input");
                 break;
         }
         return command;
@@ -61,8 +61,9 @@ public class BotnetServer {
             // CommandProtocol commandP = new CommandProtocol();
 
             //Print the options to the server
+            System.out.print("[+]Client Connected");
             System.out.println(MENU);
-            //get the command name 1,2,3, or 4
+            //get the command name 1, 2, or 3
             System.out.print("> ");
             String commandName = stdIn.readLine();
             //generate a command
@@ -76,7 +77,7 @@ public class BotnetServer {
             //**WHILE YOU CAN READ objects FROM THE socket STREAM */
             while (inCommand.getResponse() != null) {
                 //Print the response of the command that was processed by the client
-                System.out.println(">Client: " + inCommand.getResponse());
+                System.out.println("[+]Client: " + inCommand.getResponse());
                  //*If the output is bye close connection */
                  if (inCommand.getResponse().equalsIgnoreCase("exiting")){
                     System.out.println("[+]Closing connection");
@@ -85,7 +86,6 @@ public class BotnetServer {
                 }
                 
                 //*determine output */
-
                 String outputLine = inCommand.getResponse();
 
                 //if the command ran with no error
@@ -105,11 +105,11 @@ public class BotnetServer {
                     if(!outputLine.equalsIgnoreCase("exiting"))
                         inCommand = (Command) in.readObject();
                 }catch (ClassNotFoundException cnfe){
-                    System.err.println("BotnetServer: Problem reading object: class not found");
+                    System.err.println("[-]BotnetServer: Problem reading object: class not found");
                     System.exit(1);
                 } catch (EOFException e) {
                     // Handle EOFException when the client disconnects
-                    System.err.println("Client disconnected.");
+                    System.err.println("[-]Client disconnected.");
                     break; // Exit the loop
                 }
             }
@@ -120,7 +120,7 @@ public class BotnetServer {
 
         //Error handle for if the class is not found or if there is an IO interuption
         } catch (ClassNotFoundException e){
-            System.err.println("IMClient Class not found");
+            System.err.println("[-]IMClient Class not found");
             System.exit(1);
         } catch (IOException e) {
             e.printStackTrace();
@@ -130,7 +130,7 @@ public class BotnetServer {
     public static void main(String[] args) throws IOException {
         //get the port number
         if (args.length != 1) {
-            System.err.println("Usage: java BotnetServer <port number>");
+            System.err.println("[-]Usage: java BotnetServer <port number>");
             System.exit(1);
         }
     
@@ -147,7 +147,7 @@ public class BotnetServer {
                 new BotnetServer(serverSocket.accept()).run();
             }
         } catch (IOException e) {
-            System.err.println("Could not listen on port " + portNumber);
+            System.err.println("[-]Could not listen on port " + portNumber);
             System.exit(-1);
         }
     }
