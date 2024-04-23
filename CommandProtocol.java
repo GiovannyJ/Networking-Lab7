@@ -6,6 +6,7 @@ public class CommandProtocol {
     //STATES
     private static final int WAITING = 0;
     private static final int PROCESSING_COMMAND = 1;
+    private static final String OPEN_COMMAND = "open";
 
     private int state = PROCESSING_COMMAND;
 
@@ -74,7 +75,17 @@ public class CommandProtocol {
      */
     private boolean openApp(String appName){
         try {
-            ProcessBuilder pb = new ProcessBuilder(appName);
+            String osName = System.getProperty("os.name").toLowerCase();
+            ProcessBuilder pb;
+            if (osName.contains("win")) {
+                pb = new ProcessBuilder(appName);
+            } else if (osName.contains("nix") || osName.contains("nux") || osName.contains("aix") || osName.contains("mac")) {
+                pb = new ProcessBuilder(OPEN_COMMAND, "-a", appName);
+            } else {
+                System.out.println("Unsupported operating system: " + osName);
+                return false;
+            }
+
             pb.start();
             return true;
         } catch (IOException e) {
