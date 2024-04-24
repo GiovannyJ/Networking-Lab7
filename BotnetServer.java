@@ -1,6 +1,10 @@
 import java.net.*;
 import java.io.*;
 
+/**
+ * BotnetServer Class:
+ * User facing object used to create and send command objects to client for execution
+ */
 public class BotnetServer {
     // Properties
     private Socket socket;

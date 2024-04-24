@@ -2,6 +2,11 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+
+/**
+ * CommandProtocol Class:
+ * Object used to process commands on the client side, manipulate command and return an output
+ */
 public class CommandProtocol {
     //STATES
     private static final int WAITING = 0;

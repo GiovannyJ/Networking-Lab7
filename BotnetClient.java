@@ -1,6 +1,10 @@
 import java.net.*;
 import java.io.*;
 
+/**
+ * BotnetClient Class:
+ * Object used to receive commands from server, process them, and send back to server
+ */
 public class BotnetClient {
     public static void main(String[] args) throws IOException {
         //Properties

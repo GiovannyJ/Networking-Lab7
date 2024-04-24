@@ -43,7 +43,7 @@
 * Commands:
     * open app:
         * will prompt user for app name and open it on client side
-        * if the app does not exist client will close connection
+        * if the app does not exist client will close connection (on windows operating systems)
     * status:
         * returns ip address, operating system, java version, username, and status of client
     * exit:

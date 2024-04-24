@@ -1,5 +1,9 @@
 import java.io.Serializable;
 
+/**
+ * Command Class:
+ * Serializable Object used to contain information for execution of commands
+ */
 public class Command implements Serializable{
     /**
      * Properties
